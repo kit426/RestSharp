@@ -92,6 +92,11 @@ namespace RestSharp
         public string UserAgent { get; set; }
 
         /// <summary>
+        /// Whether to leave UserAgent empty
+        /// </summary>
+        public bool ExcludeUserAgent { get; set; }
+
+        /// <summary>
         /// Timeout in milliseconds to use for requests made by this client instance
         /// </summary>
         public int Timeout { get; set; }
@@ -431,9 +436,12 @@ namespace RestSharp
 
             string userAgent = this.UserAgent ?? http.UserAgent;
 
-            http.UserAgent = userAgent.HasValue()
-                ? userAgent
-                : "RestSharp/" + version;
+            if (!ExcludeUserAgent)
+            {
+                http.UserAgent = userAgent.HasValue()
+                    ? userAgent
+                    : "RestSharp/" + version;
+            }
 
             int timeout = request.Timeout > 0
                 ? request.Timeout
